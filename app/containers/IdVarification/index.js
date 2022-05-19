@@ -19,6 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 import makeSelectIdVarification from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import axios from 'axios';
 
 import Image from '../../components/uiStyle/Images';
 
@@ -86,6 +87,7 @@ export class IdVarification extends React.Component {
 
   cardSubmitHandler = e => {
     e.preventDefault();
+    const { _id } = JSON.parse(localStorage.getItem('user_data'));
 
     const idImages = {
       frontImage: this.state.frontFile,
@@ -101,11 +103,25 @@ export class IdVarification extends React.Component {
       toast.error('Please upload back side image');
     }
 
+    const formData = new FormData();
+    formData.append('front', frontFile);
+    formData.append('back', backFile);
+
+    console.log(formData);
+
     if (frontFile !== null && backFile !== null) {
-      toast.success('Request Successfully Send');
-      this.setState({
-        open: false,
-      });
+      axios
+        .post(`/api/upload-nid/${_id}`, formData)
+        .then(function(response) {
+          toast.success('NID Successfully Uploaded');
+          this.setState({
+            open: false,
+          });
+        })
+        .catch(function(error) {
+          console.log(error.response.data);
+          toast.error('NID Upload Failed');
+        });
     }
   };
 

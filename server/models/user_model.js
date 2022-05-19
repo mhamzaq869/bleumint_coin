@@ -37,7 +37,15 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'], // you have to change role manually from db 
     default: 'user',
   },
-  
+  passport_image: {
+    type : Array,
+  },
+  driving_license: {
+    type : Array,
+  },
+  nid_image: {
+    type : Array,
+  },
 });
 
 const User = mongoose.model('user', UserSchema);

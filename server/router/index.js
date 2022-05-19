@@ -5,7 +5,7 @@ const router = express.Router();
 // const Axios = require('axios');
 // const fs = require('fs');
 const config = require('../../config')
-const {SignupUser, LoginUser} = require('../controller/AuthController')
+const {SignupUser, LoginUser, Upload_NID} = require('../controller/AuthController')
 // const axios = require("axios");
 // const multer = require('multer');
 
@@ -17,7 +17,7 @@ const {SignupUser, LoginUser} = require('../controller/AuthController')
 // router.use('/settings', settings);
 router.post('/signup',SignupUser);
 router.post('/login',LoginUser);
-
+router.post('/upload-nid/:id',Upload_NID);
 
 // router.post("/singin", (req,res) => {
 //     console.log(req.body)
