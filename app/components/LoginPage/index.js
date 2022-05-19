@@ -253,6 +253,7 @@ class LoginPage extends Component {
                          <Link to="/facebook"><div className='social-icon facebook'><Icon className="fa fa-facebook white"/></div></Link>
                          <Link to="/twitter"><div className='social-icon twitter'><Icon className="fa fa-twitter white" /></div></Link>
                          <Link to="/instagram"><div className='social-icon instagram'><Icon className="fa fa-linkedin white" /></div></Link>
+                         <Link to="/google"><div className='social-icon google'><Icon className="fa fa-google white" /></div></Link>
                       </div>
                   </div>
                   <Typography variant="h6">

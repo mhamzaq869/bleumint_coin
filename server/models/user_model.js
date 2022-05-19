@@ -1,9 +1,51 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-    firstName: {
+  // googleId: {
+  //   type: String,
+  //   required: true,
+  // },  
+  // firstName: {
+  //   type: String,
+  //   // required: true
+  // },
+  // lastName: {
+  //   type: String,
+  //   // required: true
+  // },
+  // email: {
+  //   type: String,
+  //   // required: true
+  // },
+  // phone: {
+  //   type: String,
+  //   // required: true
+  // },
+  // password: {
+  //   type: String,
+  //   // required: true
+  // },
+  // wallet_address:{
+  //     type: String,
+  // },
+  // user_check : {
+  //   type:Boolean,
+  // }
+  googleId: {
+    type: String,
+    required: true,
+  },  
+  facebookId: {
+    type: String,
+    required: true,
+  },
+  firstName: {
     type: String,
     // required: true
+  },
+  twitterId: {
+    type: String,
+    required: true,
   },
   lastName: {
     type: String,
