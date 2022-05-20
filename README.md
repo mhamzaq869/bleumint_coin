@@ -1,3 +1,3 @@
 # Bleumintcoin
 
-you have to add your admin email and its password in order to send email for verification
+you have to add your email and its password inside config.js file in order to send email for verification
