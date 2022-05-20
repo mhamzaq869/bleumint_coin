@@ -71,6 +71,14 @@ export default function Routes() {
                 title="Referral"
                 component={Referral}
             />
+            
+             {/* admin */}
+             <PrivateRoute
+                path="/admin/dashboard"
+                icon={DashboardIcon}
+                title="Dashboard"
+                component={Settings}
+            />
 
             <PublicRoute exact path="/" component={LandingPage} />
             <PublicRoute exact path="/login" component={LoginPage} />
@@ -82,6 +90,9 @@ export default function Routes() {
             <Route path="/landingpage-two" component={LandingPageTwo} />
 
             <Route exact component={LoginPage} />
+
+           
+
         </Switch>
     );
 }

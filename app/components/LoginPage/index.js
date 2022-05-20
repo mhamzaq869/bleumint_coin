@@ -135,8 +135,10 @@ class LoginPage extends Component {
     var promise = new Promise( (resolve, reject) => {
       axios.post("/api/login", body)
       .then(function(response)  {
-        // dispatch(handleLogin(response.data))
+        
         localStorage.setItem("user_id",response.data.user_id)
+        localStorage.setItem("role",response.data.userdata.role)
+       
         resolve(response.data);
       })
       .catch(function(error) {
@@ -163,7 +165,15 @@ class LoginPage extends Component {
         break;
       case "Login Success":
         cookie.set('Auth', true);
-        this.props.history.push('/dashboard');
+        if(result.userdata.role=="user") {
+          console.log("user here")
+          this.props.history.push('/dashboard');
+        }
+        else if(result.userdata.role=="admin") {
+          console.log("admin here")
+          this.props.history.push('/admin/dashboard');
+        }
+        
        
      }
    }, 
@@ -179,10 +189,10 @@ class LoginPage extends Component {
   render() {
     const { email, password } = this.state;
     const auth = cookie.get('Auth');
-    if (auth) {
-      toast.info('You are Loged in');
-      return <Redirect to="/dashboard" />;
-    }
+    // if (auth) {
+    //   toast.info('You are Loged in');
+    //   return <Redirect to="/dashboard" />;
+    // }
     return (
       <Fragment>
         <Grid className="accountArea">
