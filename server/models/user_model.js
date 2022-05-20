@@ -33,11 +33,11 @@ const UserSchema = new mongoose.Schema({
   // }
   googleId: {
     type: String,
-    required: true,
+    // required: true,
   },  
   facebookId: {
     type: String,
-    required: true,
+    // required: true,
   },
   firstName: {
     type: String,
@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema({
   },
   twitterId: {
     type: String,
-    required: true,
+    // required: true,
   },
   lastName: {
     type: String,

@@ -121,7 +121,26 @@ exports.SignupUser = (req, res) => {
 
     await User.findByIdAndUpdate(id, { nid_image: [front_image , back_image] });
     return res.send({ result: 'NID Uploaded Successfully' });
-    });
+  });
+
+  exports.SaveWalletAddress = asyncHandler(async (req, res) => {
+        console.log("save-wallet-address");
+        console.log( req.body.wallet_address);
+        console.log(req.params.id);
+        const id = req.params.id;
+        wallet_address = req.body.wallet_address;
+        await User.findByIdAndUpdate(id, { wallet_address: wallet_address});
+        return res.send({ result: 'Saved Successfully' });
+  });
+
+
+    // exports.SaveWalletAddress = (req,res) => {
+    //     console.log("save-wallet-address");
+    //     console.log( req.body.wallet_address);
+    //     console.log(req.params.id);
+    //     const id = req.params.id;
+    //     wallet_address = req.body.wallet_address;
+    // }
 
 //   exports.logout = (req, res) => {
 //     req.session.destroy((err) => {

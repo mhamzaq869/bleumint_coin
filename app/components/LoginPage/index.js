@@ -136,9 +136,6 @@ class LoginPage extends Component {
       axios.post("/api/login", body)
       .then(function(response)  {
         
-        localStorage.setItem("user_id",response.data.user_id)
-        localStorage.setItem("role",response.data.userdata.role)
-       
         resolve(response.data);
       })
       .catch(function(error) {
@@ -152,9 +149,14 @@ class LoginPage extends Component {
 
    promise.then( result => {
       console.log("result is",result.userdata)
+      if( result.userdata.role != "") {
+        localStorage.setItem("user_id",result.userdata._id)
+        localStorage.setItem("role",result.userdata.role)
+      }
       self.setState({
         loading : false,
       });
+      console.log(result.result)
       switch(result.result) {
        case "Not Register User exist":
         toast.info('Not Register User');

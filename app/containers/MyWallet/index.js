@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import axios from 'axios'
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -38,9 +39,11 @@ import KeyAction from '../../images/icon/action/key-action.png';
 import './style.scss';
 import AddWallet from '../../components/AddWallet';
 import MoveCoin from '../../components/MoveCoin';
+import AddressModal from '../../components/AddressModal';
 import { isAmount } from '../../utils/commonFunctions';
 import SingleWallet from '../SingleWallet';
 import { toast } from 'react-toastify';
+
 
 const Row = [
   {
@@ -121,7 +124,9 @@ const Row = [
 export class MyWallet extends React.Component {
   state = {
     awModalOpen: false,
+    awAddressModalOpen: false,
     wallet_name: '',
+    wallet_address:'',
     mcModalOpen: false,
     sender_account: '',
     reciver_account: '',
@@ -133,10 +138,14 @@ export class MyWallet extends React.Component {
     walletView: 'all-wallet',
     selectedWallet: {},
     tab: 0,
+    loading: false
   };
 
   awHandleClickOpen = () => {
     this.setState({ awModalOpen: true });
+  };
+  awAddressClickOpen = () => {
+    this.setState({ awAddressModalOpen: true });
   };
 
   awModalCloseHandler = () => {
@@ -144,8 +153,18 @@ export class MyWallet extends React.Component {
       awModalOpen: false,
     });
   };
+  awAddressModalCloseHandler = () => {
+    this.setState({
+      awAddressModalOpen: false,
+    });
+  };
 
   awChangeHandler = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+  awAddressChangeHandler = e => {
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -175,6 +194,47 @@ export class MyWallet extends React.Component {
     }
 
   };
+  
+  awAddressSave = e => {
+    e.preventDefault();
+    const _id = localStorage.getItem('user_id');
+    const formData = new FormData();
+    console.log(this.state.wallet_address)
+    formData.append('wallet_address', this.state.wallet_address);
+    axios
+    .post(`/api/save_wallet_address/${_id}`, formData)
+    .then(function(response) {
+      toast.success('Address Successfully Save');
+      this.setState({
+        open: false,
+      });
+    })
+    .catch(function(error) {
+      // console.log(error.response.data);
+      // toast.error('NID Upload Failed');
+    });
+
+    // const id = this.state.row.length + 1;
+    // const newWallet = {
+    //   id,
+    //   name: this.state.wallet_name,
+    //   balance: '0.000000',
+    //   updated_at: '2019-01-24 12:50:17',
+    // };
+
+    // Row.unshift(newWallet);
+
+    // if (this.state.wallet_name === ''){
+    //   toast.error("Please give a valid info!")
+    // } else {
+    //   this.setState({
+    //     wallet_name: '',
+    //     awModalOpen: false,
+    //   });
+    //   toast.success("Wallet Added Successfully!");
+    // }
+
+  };
 
   mcHandleClickOpen = () => {
     this.setState({ mcModalOpen: true });
@@ -199,7 +259,7 @@ export class MyWallet extends React.Component {
   mcSubmitHandler = e => {
     e.preventDefault();
 
-    const {wallet_name, sender_account, reciver_account} = this.state;
+    const {wallet_name, sender_account, reciver_account, wallet_address} = this.state;
 
     if (amount === '' || sender_account === '' || reciver_account === ''){
       toast.error("Please give a valid info!")
@@ -240,6 +300,21 @@ export class MyWallet extends React.Component {
   tabChangeHandler = (event, value) => {
     this.setState({ tab: value });
   };
+  getNewWalletAddress = () => {
+    var self =  this;
+    self.setState({ loading: true});
+  
+    console.log("get New A")
+    axios.get("http://65.108.169.160:3001/api/getnewaddress").then(function(req,res) {
+      self.setState({ loading: false});
+      self.setState({ wallet_address: res.data});
+
+    }).catch(function(err){
+      self.setState({ loading: false});
+      self.setState({ wallet_address: "BP7pxZTzhqWv6sEaVqUVJ6kQ9csrVq4SLN" });
+      // toast.error("Network error!")
+    }) 
+  }
 
   render() {
     const { classes } = this.props;
@@ -250,14 +325,17 @@ export class MyWallet extends React.Component {
       rowsPerPage,
       pageNumberOfPage,
       awModalOpen,
+      awAddressModalOpen,
       mcModalOpen,
       wallet_name,
+      wallet_address,
       sender_account,
       reciver_account,
       amount,
       walletView,
       selectedWallet,
       tab,
+      loading,
     } = this.state;
 
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -292,6 +370,12 @@ export class MyWallet extends React.Component {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Grid className="walletMenus">
+                    <Button
+                      onClick={this.awAddressClickOpen}
+                      className="btn btnFB"
+                    >
+                      Generate new address
+                    </Button>
                     <Button
                       onClick={this.awHandleClickOpen}
                       className="btn btnBlue"
@@ -373,6 +457,17 @@ export class MyWallet extends React.Component {
           awChangeHandler={this.awChangeHandler}
           awSubmitHandler={this.awSubmitHandler}
         />
+         
+         <AddressModal
+          wallet_address={wallet_address}
+          awAddressModalOpen={awAddressModalOpen}
+          awModalCloseHandler={this.awAddressModalCloseHandler}
+          awChangeHandler={this.awAddressChangeHandler}
+          awAddressSave={this.awAddressSave}
+          getNewWalletAddress = {this.getNewWalletAddress}
+          loading = {loading}
+        />
+       
         <MoveCoin
           mcModalOpen={mcModalOpen}
           sender_account={sender_account}
