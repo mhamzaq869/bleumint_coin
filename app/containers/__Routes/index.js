@@ -7,7 +7,7 @@ import PublicRoute from 'containers/_PublicRoute/Loadable';
 
 // Normal Route
 import LandingPage from 'containers/LandingPage/Loadable';
-import LandingPageTwo from 'containers/LandingPageTwo/index'
+import LandingPageTwo from 'containers/LandingPageTwo/index';
 
 // PrivateRoute
 
@@ -16,6 +16,8 @@ import LoginPage from 'components/LoginPage/Loadable';
 import SignupPage from 'components/SignupPage/Loadable';
 import ForgotPasswordPage from 'components/ForgotPasswordPage/Loadable';
 import ConfirmCodePage from 'components/ConfirmCodePage/Loadable';
+import Test from 'components/Test/Loadable';
+import EmailVerify from 'components/EmailVerifyPage/Loadable';
 
 // icons
 import DashboardIcon from 'images/icon/breadcrumb/dashboard.svg';
@@ -33,55 +35,58 @@ import Settings from '../Settings';
 import { Referral } from '../Referral';
 
 export default function Routes() {
-    return (
-        <Switch>
-            <PrivateRoute
-                path="/dashboard"
-                icon={DashboardIcon}
-                title="Dashboard"
-                component={DashboardPage}
-            />
-            <PrivateRoute
-                path="/my-profile"
-                icon={UserIcon}
-                title="My Profile"
-                component={MyProfile}
-            />
-            <PrivateRoute
-                path="/buy-coin"
-                icon={BuyCoinIcon}
-                title="Buy Coin"
-                component={BuyCoin}
-            />
-            <PrivateRoute
-                path="/my-wallet"
-                icon={MyWalletIcon}
-                title="My Wallet"
-                component={MyWallet}
-            />
-            <PrivateRoute
-                path="/settings"
-                icon={SettingsIcon}
-                title="Settings"
-                component={Settings}
-            />
-            <PrivateRoute
-                path="/referral"
-                icon={ReferralIcon}
-                title="Referral"
-                component={Referral}
-            />
+  return (
+      <Switch>
+        <Route path="/email" component={EmailVerify} />
+        <PrivateRoute
+          path="/dashboard"
+          icon={DashboardIcon}
+          title="Dashboard"
+          component={DashboardPage}
+        />
+        <PrivateRoute
+          path="/my-profile"
+          icon={UserIcon}
+          title="My Profile"
+          component={MyProfile}
+        />
+        <PrivateRoute
+          path="/buy-coin"
+          icon={BuyCoinIcon}
+          title="Buy Coin"
+          component={BuyCoin}
+        />
+        <PrivateRoute
+          path="/my-wallet"
+          icon={MyWalletIcon}
+          title="My Wallet"
+          component={MyWallet}
+        />
+        <PrivateRoute
+          path="/settings"
+          icon={SettingsIcon}
+          title="Settings"
+          component={Settings}
+        />
+        <PrivateRoute
+          path="/referral"
+          icon={ReferralIcon}
+          title="Referral"
+          component={Referral}
+        />
 
-            <PublicRoute exact path="/" component={LandingPage} />
-            <PublicRoute exact path="/login" component={LoginPage} />
-            <PublicRoute path="/signup" component={SignupPage} />
-            <PublicRoute path="/forgot-password" component={ForgotPasswordPage} />
-            <PublicRoute path="/confirm-code" component={ConfirmCodePage} />
+        <PublicRoute exact path="/" component={LandingPage} />
+        <PublicRoute exact path="/login" component={LoginPage} />
+        <PublicRoute path="/signup" component={SignupPage} />
+        <PublicRoute path="/forgot-password" component={ForgotPasswordPage} />
+        <PublicRoute path="/confirm-code" component={ConfirmCodePage} />
+        <PublicRoute path="/test" component={Test} />
+        <PublicRoute path="/email/:id/verify/:token" component={EmailVerify} />
 
-            <Route path="/landingpage" component={LandingPage} />
-            <Route path="/landingpage-two" component={LandingPageTwo} />
+        <Route path="/landingpage" component={LandingPage} />
+        <Route path="/landingpage-two" component={LandingPageTwo} />
 
-            <Route exact component={LoginPage} />
-        </Switch>
-    );
+        <Route exact component={LoginPage} />
+      </Switch>
+  );
 }

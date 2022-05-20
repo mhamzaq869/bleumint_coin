@@ -3,12 +3,12 @@ import { injectIntl } from 'react-intl';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import Joi from 'joi-browser';
 import cookie from 'js-cookie';
-import axios from "axios";
-import { handleLogin } from '../../../redux/actions/auth'
-import './login.scss'
+import axios from 'axios';
+import { handleLogin } from '../../../redux/actions/auth';
+import './login.scss';
 // import '../../scss/common.scss'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 
 import {
   Grid,
@@ -42,9 +42,8 @@ class LoginPage extends Component {
     password: '',
     passwordShow: false,
     error: {},
-    loading : false,
+    loading: false,
   };
-  
 
   t(msg, values) {
     return this.props.intl.formatMessage(msg, values);
@@ -120,64 +119,71 @@ class LoginPage extends Component {
   };
   submitHandler = event => {
     event.preventDefault();
-    const self = this; 
+    const self = this;
     const error = self.validate();
     self.setState({
-      loading : true,
+      loading: true,
     });
     self.setState({
       error: error || {},
     });
-    
+
     let body = {
       email: self.state.email,
       password: self.state.password,
     };
- 
-    var promise = new Promise( (resolve, reject) => {
-      axios.post("/api/login", body)
-      .then(function(response)  {
-        console.log(response.data.userdata)
-        // dispatch(handleLogin(response.data))
-        localStorage.setItem("user_data",JSON.stringify(response.data.userdata))
-        resolve(response.data);
-      })
-      .catch(function(error) {
+
+    var promise = new Promise((resolve, reject) => {
+      axios
+        .post('/api/login', body)
+        .then(function(response) {
+          console.log(response.data);
+          // dispatch(handleLogin(response.data))
+          localStorage.setItem(
+            'user_data',
+            JSON.stringify(response.data.userdata),
+          );
+          resolve(response.data);
+        })
+        .catch(function(error) {
           console.log(error);
           self.setState({
             loading: false,
           });
           toast.info('Failed Network');
-      });
-   });
-
-   promise.then( result => {
-      console.log("result is",result.userdata)
-      self.setState({
-        loading : false,
-      });
-      switch(result.result) {
-       case "Not Register User exist":
-        toast.info('Not Register User');
-        
-        break;
-      case "Incorrect password":
-        toast.info('Incorrect password');
-        break;
-      case "Login Success":
-        cookie.set('Auth', true);
-        this.props.history.push('/dashboard');
-       
-     }
-   }, 
-   function(error) {
-      self.setState({
-        loading : false,
-      });
-      toast.info('Failed Network');
-      console.log("here is ",error)
+        });
     });
-  } 
+
+    promise.then(
+      result => {
+        console.log('result is', result.userdata);
+        self.setState({
+          loading: false,
+        });
+        switch (result.result) {
+          case 'Unverified':
+            toast.error('An Email sent to your account please verify');
+            break;
+          case 'Not Register User':
+            toast.info('Not Register User');
+            break;
+          case 'Incorrect password':
+            toast.info('Incorrect password');
+            break;
+          case 'Login Success':
+            cookie.set('Auth', true);
+            this.props.history.push('/dashboard');
+        }
+      },
+      function(error) {
+        self.setState({
+          loading: false,
+        });
+        toast.info('Failed Network');
+        console.log('here is ', error);
+      },
+    );
+  };
 
   render() {
     const { email, password } = this.state;
@@ -251,12 +257,24 @@ class LoginPage extends Component {
                     Sign In
                   </Button>
                   <div className="form-bottom text-center mb-10">
-                      <h4 className="or mb-10" >OR</h4>
-                      <div className="social-media" >
-                         <Link to="/facebook"><div className='social-icon facebook'><Icon className="fa fa-facebook white"/></div></Link>
-                         <Link to="/twitter"><div className='social-icon twitter'><Icon className="fa fa-twitter white" /></div></Link>
-                         <Link to="/instagram"><div className='social-icon instagram'><Icon className="fa fa-linkedin white" /></div></Link>
-                      </div>
+                    <h4 className="or mb-10">OR</h4>
+                    <div className="social-media">
+                      <Link to="/facebook">
+                        <div className="social-icon facebook">
+                          <Icon className="fa fa-facebook white" />
+                        </div>
+                      </Link>
+                      <Link to="/twitter">
+                        <div className="social-icon twitter">
+                          <Icon className="fa fa-twitter white" />
+                        </div>
+                      </Link>
+                      <Link to="/instagram">
+                        <div className="social-icon instagram">
+                          <Icon className="fa fa-linkedin white" />
+                        </div>
+                      </Link>
+                    </div>
                   </div>
                   <Typography variant="h6">
                     Don’t have account ? <Link to="/signup">Sign Up</Link>
