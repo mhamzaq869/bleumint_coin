@@ -77,7 +77,7 @@ function SubmitIdCard({
                       accept=".jpeg,.jpg,.png,.svg"
                       type="file"
                       id="choose-front-profile"
-                      name="choose-front-profile"
+                      name="front-image"
                       onChange={handleImageChange(
                         'frontFile',
                         'frontPreviewUrl',
@@ -103,7 +103,7 @@ function SubmitIdCard({
                       accept=".jpeg,.jpg,.png,.svg"
                       type="file"
                       id="choose-back-profile"
-                      name="choose-back-profile"
+                      name="back-image"
                       onChange={handleImageChange('backFile', 'backPreviewUrl')}
                     />
                   </Button>

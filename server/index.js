@@ -11,11 +11,15 @@ const config = require('../config')
 const isDev = process.env.NODE_ENV !== 'production';
 const userRouter = require('./router')
 const mongoose = require('mongoose');
+const fileupload = require("express-fileupload");
+
+
 const ngrok =
   (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
     ? require('ngrok')
     : false;
 const { resolve } = require('path');
+app.use(fileupload());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 app.use('/api', userRouter);

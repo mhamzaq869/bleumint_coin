@@ -2,6 +2,12 @@ const User = require("../models/user_model");
 const bcrypt = require("bcryptjs");
 const { Redirect } = require("react-router-dom");
 const Axios = require('axios');
+
+const asyncHandler = require('../middlewares/AsyncHandler');
+const config = require('../../config');
+const path = require('path');
+
+
 exports.SignupUser = (req, res) => {
 
     const { firstName,lastName,email,phone,password } = req.body;
@@ -12,9 +18,28 @@ exports.SignupUser = (req, res) => {
             console.log("user exist")
             return res.send({"result" : "already exist"});
         }
+
+        // var promise = new Promise( (resolve, reject) => {
+        //     Axios.post("/email",{email:email})
+        //     .then(function(response)  {
+        //       resolve(response.data);
+        //     })
+        //     .catch(function(error) {
+        //         console.log(error);
+             
+        //     });
+        //  });
+      
+        //  promise.then( result => {
+        //     console.log("herer 123123")
+        //     console.log("mail confirm is",result)
+           
+        //  })
      
       
         const newUser = new User({firstName,lastName,email,phone,password});
+       
+
         bcrypt.genSalt(12, (err, salt) =>
             bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
@@ -47,12 +72,56 @@ exports.SignupUser = (req, res) => {
         console.log("exist user",user);
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (!isMatch) return res.send({result:"Incorrect password"});
-            const sessUser = { user_id: user.id, name: user.name, authority: 'customer', email: user.mail };
-            res.send({result:"Login Success", userdata:user});; // sends cookie with sessionID automatically in response
+            const sessUser = { user_id: user._id, name: user.name, authority: 'customer', email: user.mail };
+          
+            res.send({result:"Login Success", userdata:user, user_id:user._id});; // sends cookie with sessionID automatically in response
         });
     });
    
   };
+  
+  exports.Upload_NID = asyncHandler(async (req, res) => {
+    if (!req.files) {
+      res.send('File was not found');
+      return;
+    }
+    console.log("upload nid here")
+    const id = req.params.id;
+    front_image = req.files.front;
+    back_image = req.files.back;
+    // if (
+    //     front_image.size > config.MAX_FILE_SIZE ||
+    //     back_image.size > config.MAX_FILE_SIZE
+    // ) {
+    //     return next(
+    //     new ErrorResponse(
+    //         `Please upload an photo of less than ${config.MAX_FILE_SIZE}`,
+    //         400,
+    //     ),
+    //     );
+    // }
+    front_image.name = `nid-front-${id}${path.parse(front_image.name).ext}`;
+    back_image.name = `nid-back-${id}${path.parse(back_image.name).ext}`;
+    front_image.mv(`${`${config.BASEURL}NID`}/${front_image.name}`, async err => {
+        if (err) {
+        console.log(err);
+        return res.send({ result: 'Failed to upload NID' });
+        }
+
+
+    });
+
+    back_image.mv(`${`${config.BASEURL}nid`}/${back_image.name}`, async err => {
+        if (err) {
+        console.log(err);
+        return res.send({ result: 'Failed to upload NID' });
+        }
+
+    });
+
+    await User.findByIdAndUpdate(id, { nid_image: [front_image , back_image] });
+    return res.send({ result: 'NID Uploaded Successfully' });
+    });
 
 //   exports.logout = (req, res) => {
 //     req.session.destroy((err) => {

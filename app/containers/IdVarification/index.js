@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
+import axios from 'axios';
 import { Typography } from '@material-ui/core';
 
 import injectSaga from 'utils/injectSaga';
@@ -85,13 +85,16 @@ export class IdVarification extends React.Component {
   };
 
   cardSubmitHandler = e => {
+    console.log("here")
     e.preventDefault();
-
+    const _id = localStorage.getItem('user_id');
+    console.log("_id");
+    console.log(_id);
     const idImages = {
       frontImage: this.state.frontFile,
       backImage: this.state.backFile,
     };
-
+   
     const { frontFile, backFile } = this.state;
 
     if (frontFile === null) {
@@ -101,12 +104,32 @@ export class IdVarification extends React.Component {
       toast.error('Please upload back side image');
     }
 
+    const formData = new FormData();
+    formData.append('front', frontFile);
+    formData.append('back', backFile);
+
+    console.log("formData 123" );
+    console.log(formData);
+
     if (frontFile !== null && backFile !== null) {
-      toast.success('Request Successfully Send');
+      // toast.success('Request Successfully Send');
       this.setState({
         open: false,
       });
     }
+    axios
+    .post(`/api/upload-nid/${_id}`, formData)
+    .then(function(response) {
+      toast.success('NID Successfully Uploaded');
+      this.setState({
+        open: false,
+      });
+    })
+    .catch(function(error) {
+      // console.log(error.response.data);
+      // toast.error('NID Upload Failed');
+    });
+
   };
 
   render() {

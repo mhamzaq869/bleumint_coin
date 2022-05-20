@@ -4,11 +4,9 @@ import { Link, withRouter, Redirect } from 'react-router-dom';
 import Joi from 'joi-browser';
 import cookie from 'js-cookie';
 import axios from "axios";
-import { handleLogin } from '../../../redux/actions/auth'
 import './login.scss'
 // import '../../scss/common.scss'
 
-import { useDispatch } from 'react-redux'
 
 import {
   Grid,
@@ -138,7 +136,7 @@ class LoginPage extends Component {
       axios.post("/api/login", body)
       .then(function(response)  {
         // dispatch(handleLogin(response.data))
-        localStorage.setItem("user_data",response.data.userdata)
+        localStorage.setItem("user_id",response.data.user_id)
         resolve(response.data);
       })
       .catch(function(error) {
