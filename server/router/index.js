@@ -8,7 +8,8 @@ const User = require("../models/user_model");
 // const Axios = require('axios');
 // const fs = require('fs');
 const config = require('../../config')
-const {SignupUser, LoginUser, Upload_NID, SaveWalletAddress} = require('../controller/AuthController')
+const {SignupUser, LoginUser, Upload_NID, SaveWalletAddress, VerifyUser, GetAllUser, GetNidImage} = require('../controller/AuthController')
+
 const fs = require('fs');
 // const axios = require("axios");
 // const multer = require('multer');
@@ -23,6 +24,12 @@ router.post('/signup',SignupUser);
 router.post('/login',LoginUser);
 router.post('/upload-nid/:id', Upload_NID);
 router.post('/save_wallet_address/:id', SaveWalletAddress);
+router.get('/users/:id/verify/:token', VerifyUser);
+
+
+router.get('/getAllUser', GetAllUser);
+router.post('/getNIDImage/:id', GetNidImage);
+
 
 // router.post('/NIDupload', upload.single('front'), (req,res)=>{
 //     // console.log(req.);

@@ -22,10 +22,23 @@ const { resolve } = require('path');
 app.use(fileupload());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 app.use('/api', userRouter);
 
 
 // In production we need to pass these values in instead of relying on webpack
+
+console.log("-------------->s", __dirname );
+// app.use("/public",express.static(__dirname +'/public'));
+app.use("/uploads",express.static(__dirname +'/public/uploads'));
+
+
 setup(app, {
   outputPath: resolve(process.cwd(), 'build'),
   publicPath: '/',
@@ -65,7 +78,7 @@ app.listen(port, host, async err => {
 });
 
 mongoose.connect(config.URL+ config.DBNAME, { useNewUrlParser: true ,useFindAndModify: false}).then(() => {
-  console.log('Database is connected') 
+  console.log(config.URL+ config.DBNAME, 'Database is connected') 
   },
   err => { console.log('Can not connect to the database'+ err)}
 );

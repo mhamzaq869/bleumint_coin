@@ -84,6 +84,10 @@ const UserSchema = new mongoose.Schema({
   nid_image: {
     type : Array,
   },
+  verified: {
+    type: Boolean,
+    default: false
+  }
 
 });
 

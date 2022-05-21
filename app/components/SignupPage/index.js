@@ -192,7 +192,8 @@ class SignupPage extends Component {
         toast.info('already exist');
         break;
       case "success":
-        toast.success('Register success');
+        // toast.success('Register success');
+        toast.success('An Email sent to your account please verify');
         this.props.history.push('/login');
      
      }

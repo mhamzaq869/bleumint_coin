@@ -5,6 +5,9 @@ import { Switch, Route } from 'react-router-dom';
 import PrivateRoute from 'containers/_PrivateRoute/Loadable';
 import PublicRoute from 'containers/_PublicRoute/Loadable';
 
+//admin route
+import AdminPrivateRoute from 'containers/_AdminPrivateRoute';
+
 // Normal Route
 import LandingPage from 'containers/LandingPage/Loadable';
 import LandingPageTwo from 'containers/LandingPageTwo/index'
@@ -16,6 +19,10 @@ import LoginPage from 'components/LoginPage/Loadable';
 import SignupPage from 'components/SignupPage/Loadable';
 import ForgotPasswordPage from 'components/ForgotPasswordPage/Loadable';
 import ConfirmCodePage from 'components/ConfirmCodePage/Loadable';
+import EmailVerify from 'components/EmailVerifyPage/Loadable';
+
+import PendingIdVarification from 'containers/AdminPart/PendingIdVarification/Loadable'
+
 
 // icons
 import DashboardIcon from 'images/icon/breadcrumb/dashboard.svg';
@@ -31,6 +38,8 @@ import BuyCoin from '../BuyCoin';
 import MyWallet from '../MyWallet';
 import Settings from '../Settings';
 import { Referral } from '../Referral';
+
+
 
 export default function Routes() {
     return (
@@ -71,20 +80,27 @@ export default function Routes() {
                 title="Referral"
                 component={Referral}
             />
-            
-             {/* admin */}
-             <PrivateRoute
-                path="/admin/dashboard"
-                icon={DashboardIcon}
-                title="Dashboard"
+            <PrivateRoute
+                path="admin/dashboard"
+                icon={SettingsIcon}
+                title="Settings"
                 component={Settings}
             />
+            
+             {/* admin */}
+             {/* <AdminPrivateRoute
+                exact
+                path="/admin/dashboard"
+                component={PendingIdVarification}
+                titles={['Reports', ' KYC Pending']}
+            /> */}
 
             <PublicRoute exact path="/" component={LandingPage} />
             <PublicRoute exact path="/login" component={LoginPage} />
             <PublicRoute path="/signup" component={SignupPage} />
             <PublicRoute path="/forgot-password" component={ForgotPasswordPage} />
             <PublicRoute path="/confirm-code" component={ConfirmCodePage} />
+            <PublicRoute path="/email/:id/verify/:token" component={EmailVerify} />
 
             <Route path="/landingpage" component={LandingPage} />
             <Route path="/landingpage-two" component={LandingPageTwo} />
